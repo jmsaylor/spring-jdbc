@@ -1,0 +1,5 @@
+INSERT INTO country(name, population, gdp) values('China', 2000, 1200)
+INSERT INTO country(name, population, gdp) values('USA', 375, 4000)
+INSERT INTO country(name, population, gdp) values('India', 1100, 800)
+INSERT INTO country(name, population, gdp) values('Japan', 140, 1000)
+INSERT INTO country(name, population, gdp) values('Russia', 180, 900)

@@ -6,6 +6,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootApplication
 public class SpringVegaApplication {
@@ -23,6 +24,15 @@ public class SpringVegaApplication {
 		System.out.println("------- INSERT ----------------------------------------");
 		Country country = new Country("Pakistan", 300, 380);
 		dao.create(country);
+
+		System.out.println("------- UPDATE ----------------------------------------");
+		Optional<Country> countryToUpdate = dao.get(5);
+		country = countryToUpdate.get();
+		country.setPopulation(175);
+		dao.update(country, country.getId());
+
+		System.out.println("------- DELETE ----------------------------------------");
+		dao.delete(4);
 
 		System.out.println("------- ALL COUNTRIES ----------------------------------");
 		List<Country> countries = dao.list();

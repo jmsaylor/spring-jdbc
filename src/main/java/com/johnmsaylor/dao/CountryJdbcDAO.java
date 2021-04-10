@@ -3,6 +3,7 @@ package com.johnmsaylor.dao;
 import com.johnmsaylor.model.Country;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
@@ -40,29 +41,35 @@ public class CountryJdbcDAO implements DAO<Country> {
         String sql = "insert into country(name, population, gdp) values(?,?,?)";
         int rowsAffected = jdbcTemplate.update(sql, country.getName(), country.getPopulation(), country.getGdp());
         if (rowsAffected == 1) {
-            System.out.println("INSERT SUCCESS: " + country.getName());
+            log.info("INSERT SUCCESS: " + country.getName());
         }
     }
 
     @Override
     public Optional<Country> get(int id) {
-        String sql = "select id, name, population, id from country where id = ?";
+        String sql = "select id, name, population, gdp from country where id = ?";
         Country country = null;
 
         try {
+            country = jdbcTemplate.queryForObject(sql, rowMapper, id);
+        } catch (DataAccessException ex){
+            log.info("Country not found: " + id);
+        };
 
-        } catch (Exception ex){};
-
-        return Optional.empty();
+        return Optional.ofNullable(country);
     }
 
     @Override
     public void update(Country country, int id) {
-
+        String sql = "update country set name = ?, population = ?, gdp = ? where id = ?";
+        int updated = jdbcTemplate.update(sql, country.getName(), country.getPopulation(), country.getGdp(), id);
+        if (updated == 1){
+            log.info("UPDATED: " + country);
+        }
     }
 
     @Override
     public void delete(int id) {
-
+        jdbcTemplate.update("delete from country where id = ?", id);
     }
 }
